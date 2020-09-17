@@ -16,6 +16,7 @@ import Table from "./features/table/components/table";
 import LineGraph from "./features/graph/components/lineGraph";
 
 import "leaflet/dist/leaflet.css";
+import { printStat } from "./utils";
 
 interface countryObj {
   country: {
@@ -44,6 +45,7 @@ const App: React.FC = () => {
   });
   const [mapZoom, setMapZoom] = useState<number>(3);
   const [mapCountries, setMapCountries] = useState<any[]>([]);
+  const [casesType, setCasesTypes] = useState<string>("cases");
 
   useEffect(() => {
     const getCountries = async () => {
@@ -93,7 +95,7 @@ const App: React.FC = () => {
     <div className="App">
       <div className="app__left">
         <div className="app__header">
-          <h1>COVID</h1>
+          <h1>COVID-19 Tracker</h1>
           <FormControl className="app__dropdown">
             <Select
               variant="outlined"
@@ -111,28 +113,43 @@ const App: React.FC = () => {
         </div>
         <div className="app__stats">
           <InfoBox
+            isRed
+            onClick={(e) => setCasesTypes("cases")}
+            active={casesType === "cases"}
             title="Coronavirus Cases"
-            cases={(countryInfo || {}).todayCases}
-            total={300}
+            cases={printStat((countryInfo || {}).todayCases)}
+            total={printStat((countryInfo || {}).cases)}
           />
           <InfoBox
+            onClick={(e) => setCasesTypes("recovered")}
+            active={casesType === "recovered"}
             title="Recovered"
-            cases={(countryInfo || {}).todayRecovered}
-            total={300}
+            cases={printStat((countryInfo || {}).todayRecovered)}
+            total={printStat((countryInfo || {}).recovered)}
           />
           <InfoBox
+            isRed
+            onClick={(e) => setCasesTypes("deaths")}
+            active={casesType === "deaths"}
             title="Deaths"
-            cases={(countryInfo || {}).todayDeaths}
-            total={300}
+            cases={printStat((countryInfo || {}).todayDeaths)}
+            total={printStat((countryInfo || {}).deaths)}
           />
         </div>
-        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
+        <Map
+          casesType={casesType}
+          countries={mapCountries}
+          center={mapCenter}
+          zoom={mapZoom}
+        />
       </div>
       <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country</h3>
           <Table countries={tableData} />
-          <LineGraph casesType="cases" />
+          <h3>Worldwide new {casesType}</h3>
+
+          <LineGraph casesType={casesType} />
         </CardContent>
       </Card>
     </div>

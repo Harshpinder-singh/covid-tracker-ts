@@ -76,7 +76,7 @@ const LineGraph: React.FC<LineGraphProps> = ({
   useEffect(() => {
     const getChart = async () => {
       const res = await fetch(
-        "https://disease.sh/v3/covid-19/historical/all?lastdays=20"
+        "https://disease.sh/v3/covid-19/historical/all?lastdays=10"
       );
 
       const data = await res.json();
