@@ -12,21 +12,22 @@ const options = {
     display: false,
   },
   elements: {
-    points: {
+    point: {
       radius: 0,
     },
   },
   maintainAspectRatio: false,
   tooltips: {
     mode: "index",
-    intersect: {
-      label: function (tooltipItem: any, data: any) {
+    intersect: false,
+    callbacks: {
+      label: function (tooltipItem: { [k: string]: any }, data: {}) {
         return numeral(tooltipItem.value).format("+0,0");
       },
     },
   },
   scales: {
-    xAxis: [
+    xAxes: [
       {
         type: "time",
         time: {
@@ -35,13 +36,14 @@ const options = {
         },
       },
     ],
-    yAxis: [
+    yAxes: [
       {
         gridLines: {
           display: false,
         },
         ticks: {
-          callback: function (value: any, index: number, values: any) {
+          // Include a dollar sign in the ticks
+          callback: function (value: number) {
             return numeral(value).format("0a");
           },
         },
@@ -49,7 +51,6 @@ const options = {
     ],
   },
 };
-
 const LineGraph: React.FC<LineGraphProps> = ({
   countries,
   casesType = "cases",
